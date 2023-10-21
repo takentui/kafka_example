@@ -14,7 +14,8 @@ router = APIRouter()
 @router.post("/event-inside", status_code=status.HTTP_201_CREATED)
 async def persist_business_customer_event_inside(payload: models.CustomerRequest) -> Response:
     customer = await save_business_customer(payload)
-    # add some code here
+    # add some another code
+    # add some magic here
     try:
         await kafka_producer.produce_message({"uid": str(customer.uid), "type": customer.type_, "in_box": True})
     except:
