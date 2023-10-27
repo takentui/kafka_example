@@ -35,6 +35,10 @@ case "$1" in
     echo "Starting producer..."
     python -m app.producer.main &
     ;;
+  "consumer")
+    echo "Starting consumer..."
+    python -u -m app.consumer.main &
+    ;;
   *)
     exec ${@}
     ;;
