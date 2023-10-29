@@ -643,7 +643,7 @@ addopts = "--cov app --cov tests --cov-report term-missing --cov-branch --junitx
 env = [
   "APP_DEBUG = 0",
   "APP_JSON_LOGGER_ENABLED = 0",
-  "DATABASES_DSN = postgresql+asyncpg://local:local@localhost:5432/postgres?jit=off",
+  "DATABASES_DSN = postgresql+asyncpg://local:local@postgres:5432/postgres?jit=off",
   "DOC_STORAGE_HOST="
 ]
 
