@@ -30,7 +30,7 @@ LOGGING = {
         "file_handler": {
             "level": application.log_level,
             "class": "logging.handlers.RotatingFileHandler",
-            "filename": "app/logs/fastapi-elk-stack.log",
+            "filename": "/opt/one-more-backend/app/logs/fastapi-elk-stack.log",
             "mode": "a",
             "maxBytes": 15000000,
             "backupCount": 5,
