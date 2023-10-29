@@ -1,3 +1,5 @@
+import logging
+
 import pika
 import json
 import time
@@ -5,7 +7,7 @@ import time
 from app.config import rabbit, RabbitSettings
 
 
-class PikaPublisher:
+class PikaConsumer:
 
     def __init__(self, cfg: RabbitSettings):
         self._cfg = cfg
@@ -18,15 +20,25 @@ class PikaPublisher:
         self._channel = self._connection.channel()
         self._channel.exchange_declare(exchange=self._cfg.exchange_name, exchange_type=self._cfg.exchange_type)
 
+        self._result = self._channel.queue_declare(queue='', exclusive=True)
+        self._queue_name = self._result.method.queue
+
+        self._channel.queue_bind(exchange=self._cfg.exchange_name, queue=self._queue_name)
+
+    def callback(self, ch, method, properties, body):
+        logging.warning("Message was received -  processing it...")
+        print(f" [xxx] {body}")
+
     def close(self):
         self._connection.close()
 
-    def send_message(self, message_type, message):
+    def receive_message(self):
         self.initialize()
-        message = json.dumps({'type': message_type, 'message': message})
-        self._channel.basic_publish(exchange=self._cfg.exchange_name, routing_key=self._cfg.queue_name, body=message)
+        self._channel.basic_consume(
+            queue=self._queue_name, on_message_callback=self.callback, auto_ack=True)
+        self._channel.start_consuming()
         self.close()
 
 
 
-rabbit_publisher = PikaPublisher(rabbit)
+rabbit_consumer = PikaConsumer(rabbit)

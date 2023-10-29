@@ -4,6 +4,7 @@ from prometheus_client import start_http_server
 from .service import ProducerService
 
 
+
 def main() -> None:
     producer_service = ProducerService()
     asyncio.run(producer_service.run())

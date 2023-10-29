@@ -4,6 +4,7 @@ from .app import AppSettings
 from .db import DBSettings
 from .kafka import KafkaSettings
 from .rabbit import RabbitSettings
+import logging.handlers
 
 application: AppSettings = AppSettings()  # type: ignore[call-arg]
 database: DBSettings = DBSettings()  # type: ignore[call-arg]
@@ -26,30 +27,39 @@ LOGGING = {
             "class": "logging.StreamHandler",
             "formatter": "verbose",
         },
+        "file_handler": {
+            "level": application.log_level,
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": "app/logs/fastapi-elk-stack.log",
+            "mode": "a",
+            "maxBytes": 15000000,
+            "backupCount": 5,
+            "formatter": "verbose",
+        },
     },
     "loggers": {
         "": {
-            "handlers": ["console"],
+            "handlers": ["console", "file_handler"],
             "level": "INFO",
             "propagate": False,
         },
         "app": {
-            "handlers": ["console"],
+            "handlers": ["console", "file_handler"],
             "level": application.log_level,
             "propagate": False,
         },
         "gunicorn": {
-            "handlers": ["console"],
+            "handlers": ["console", "file_handler"],
             "level": application.log_level,
             "propagate": False,
         },
         "uvicorn": {
-            "handlers": ["console"],
+            "handlers": ["console", "file_handler"],
             "level": application.log_level,
             "propagate": False,
         },
         "root": {
-            "handlers": ["console"],
+            "handlers": ["console", "file_handler"],
             "level": application.log_level,
             "propagate": False,
         },
